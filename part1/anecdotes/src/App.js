@@ -12,16 +12,17 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
 
+  // Create a random integer ranging from 0-5 by using Math.floor.
   const randomInteger = () => {
     return Math.floor(Math.random() * anecdotes.length)
   }
 
+  // Set helper function to a variable and use it as an argument for setSelected and reference it to onClick.
   const newAnecdote = () => {
     let change = randomInteger()
     setSelected(change)
   }
 
-  console.log(selected)
   return (
     <div>
       <p>{anecdotes[selected]}</p>

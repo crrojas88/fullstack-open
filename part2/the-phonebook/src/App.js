@@ -12,11 +12,20 @@ const App = () => {
 
   const addName = (e) => {
     e.preventDefault()
+    
     const nameObj = {
       name: newName
     }
-    setPersons(persons.concat(nameObj))
-    setNewName('')
+
+    for (let i = 0; i < persons.length; i++) {
+      if(!persons[i].name.includes(newName)) {
+        setPersons(persons.concat(nameObj))
+        setNewName('')
+      } else {
+        alert(`${newName} already exists`)
+        setNewName('')
+      }
+    }
   }
 
   return (

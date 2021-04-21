@@ -19,7 +19,7 @@ const CountryList = ({ countries }) => {
     } else if(countries.length === 1) {
         return(
             <div>
-                {countries.map(country => <CountryCard key={country.numericCode} name={country.name} capital={country.capital} pop={country.population} flag={country.flag} languages={country.languages}/>)}
+                {countries.map(country => <CountryCard key={country.numericCode} name={country.name} capital={country.capital} pop={country.population} flag={country.flag} languages={country.languages} />)}
             </div>
         )
     } else {

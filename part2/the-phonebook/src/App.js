@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import Search from './components/Search';
 import Form from './components/Form';
 import ContactList from './components/Contact-list';
+
+import contactService from './services/contacts';
 
 const App = () => {
  
@@ -13,10 +15,10 @@ const App = () => {
 
   // fetch promise and data from db.json
   const hook = () => {
-    axios.get('http://localhost:3001/persons')
-    .then(response => {
-      console.log(response)
-      setPersons(response.data)
+    contactService
+    .getAll()
+    .then(initialContacts => {
+      setPersons(initialContacts)
     })
   }
   useEffect(hook, [])
@@ -49,11 +51,14 @@ const App = () => {
     if(exists){
       alert(`${newName} already exists`)
     } else {
-      setPersons(persons.concat(nameObj))
+      contactService
+      .create(nameObj)
+      .then(returnedContact => {
+        setPersons(persons.concat(returnedContact))
+        setNewName('')
+        setNewNumber('')
+      })
     }
-    
-    setNewName('')
-    setNewNumber('')
   }
 
   // Filters through the persons array and renders ContactList accordingly taking account of lowercase inputs.

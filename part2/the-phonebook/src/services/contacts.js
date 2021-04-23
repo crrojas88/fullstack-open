@@ -12,6 +12,11 @@ const create = newObject => {
     return request.then(response => response.data)
 }
 
-const contactService = { getAll, create }
+const remove = id => {
+    const request = axios.delete(`${baseUrl}/${id}`)
+    return request.then(response => response.data)
+}
+
+const contactService = { getAll, create, remove }
 
 export default contactService

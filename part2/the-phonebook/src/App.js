@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Notification from './components/Notification';
 import Search from './components/Search';
 import Form from './components/Form';
 import ContactList from './components/Contact-list';
@@ -10,6 +11,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchField, setSearchField ] = useState('')
+  const [ message, setMessage ] = useState(null)
 
   // fetch promise and data from db.json
   const hook = () => {
@@ -47,6 +49,10 @@ const App = () => {
     .create(nameObj)
     .then(returnedContact => {
       setPersons(persons.concat(returnedContact))
+      setMessage(`${newName} has been added!`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 3000)
     })
     setNewName('')
     setNewNumber('')
@@ -112,6 +118,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+        <Notification message={message}/>
         <Search placeholder='Search Contacts' searchField={searchField} handleChange={handleChange} />
       <h2>Add New Contact</h2>
         <Form handleSubmit={handleSubmit} newName={newName} newNumber={newNumber} handleChange={handleChange}/>

@@ -34,7 +34,7 @@ const App = () => {
     }
   }
 
-  // Adds new contact object including new number. Prevents from adding repetitive names. 
+  // Adds new contact. 
   const addContact = (e) => {
     e.preventDefault()
     
@@ -43,17 +43,39 @@ const App = () => {
       number: newNumber
     }
 
-    const exists = persons.find(person => person.name === newName && person.number === newNumber)
+    contactService
+    .create(nameObj)
+    .then(returnedContact => {
+      setPersons(persons.concat(returnedContact))
+    })
+    setNewName('')
+    setNewNumber('')
+  }
 
-    if(exists){
-      alert(`${newName} already exists`)
-    } else {
+  // handles submit button logic to add new or edit existing contact.
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const exists = persons.find(person => person.name === newName)
+    
+    if(exists) {
+      const person = persons.find(p => p.name === newName)
+      const confirmChange = window.confirm(`${newName} already exists. Replace old number with a new one?`)
+      if(confirmChange) {
+      const id = person.id
+      const updatedPerson = {...person, number: newNumber}
+
       contactService
-      .create(nameObj)
+      .update(updatedPerson, id)
       .then(returnedContact => {
-        setPersons(persons.concat(returnedContact))
+      setPersons(persons.map(p => p.id !== id ? p: returnedContact))
       })
-    }
+      } else {
+        setPersons(persons)
+      }
+    } else {
+      addContact(e)
+    } 
     setNewName('')
     setNewNumber('')
   }
@@ -92,7 +114,7 @@ const App = () => {
       <h1>Phonebook</h1>
         <Search placeholder='Search Contacts' searchField={searchField} handleChange={handleChange} />
       <h2>Add New Contact</h2>
-        <Form addContact={addContact} newName={newName} newNumber={newNumber} handleChange={handleChange}/>
+        <Form handleSubmit={handleSubmit} newName={newName} newNumber={newNumber} handleChange={handleChange}/>
       <h2>Numbers</h2>
         <ContactList persons={filteredContacts} handleDelete={handleDelete}/>
     </div>

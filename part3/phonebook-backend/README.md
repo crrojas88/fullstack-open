@@ -6,7 +6,7 @@
 
 ### Deployed server/app
 
-You can find the deployed server [here](https://phonebook-backend-2021.herokuapp.com/)
+You can find the deployed app and server [here](https://phonebook-backend-2021.herokuapp.com/)
 
 <br />
 

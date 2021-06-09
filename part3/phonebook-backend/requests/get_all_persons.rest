@@ -1,4 +1,4 @@
-GET http://localhost:3001/api/persons
+# GET http://localhost:3001/api/persons
 
 # GET http://localhost:3001/info
 
@@ -10,6 +10,6 @@ GET http://localhost:3001/api/persons
 # Content-Type: application/json
 
 # {
-#     "name": "Dooks",
-#     "number": "5108472844"
+#     "name": "Hannah Rickard",
+#     "number": "06-51-99-56-83"
 # }

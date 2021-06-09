@@ -7,48 +7,10 @@ const app = express()
 
 app.use(express.static('build'))
 app.use(express.json())
-morgan.token('body', (req, res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :response-time ms :body :req[content]'))
-
 app.use(cors())
 
-let persons = [
-    {
-      name: "Arto Hellas",
-      number: "040-123456",
-      id: 1
-    },
-    {
-      name: "Ada Lovelace",
-      number: "39-44-5323523",
-      id: 2
-    },
-    {
-      name: "Dan Abramov",
-      number: "12-43-234345",
-      id: 3
-    },
-    {
-      name: "Mary Poppendieck",
-      number: "39-23-6423122",
-      id: 4
-    },
-    {
-      name: "Hannah Rickard",
-      number: "06-51-99-56-83",
-      id: 5
-    },
-    {
-      name: "Hyun Namkoong",
-      number: "10987654",
-      id: 6
-    },
-    {
-      name: "Courtney Martinez",
-      number: "3691215",
-      id: 7
-    }
-  ]
+morgan.token('body', (req, res) => JSON.stringify(req.body))
 
   app.get('/', (request, response) => {
       response.send('<h1>Phonebook</h1>')
@@ -64,7 +26,7 @@ let persons = [
 })
 
   app.get('/api/persons', (request, response) => {
-    Person.find({}).then(persons => {response.json(persons)})
+    Person.find({}).then(people => {response.json(people)})
   })
 
 //   GET single entry and return 404 status if id doesn't exist.
@@ -79,30 +41,27 @@ let persons = [
       }
   })
 
-  const generateId = () => {
-      const maxId = persons.length > 0 ? Math.max(...persons.map(person => person.id)) : 0
-      return maxId + 1
-  }
-
+  // Adding a new person allows user to create multiple entries for a person with the same name.
   app.post('/api/persons', (request, response) => {
       const body = request.body
-      const nameExists = persons.find(person => person.name === body.name)
-
-      if(!body.name || !body.number) {
-          return response.status(400).json({error: 'content missing'})
-      } else if(nameExists) {
-          return response.status(400).json({ error: 'name must be unique' })
+      
+      if(body.content === null) {
+          return response.status(400).json({error: 'Content missing.'})
+      } else if(!body.name) {
+        return response.status(400).json({error: 'Name is required'})
+      } else if(!body.number) {
+        return response.status(400).json({error: 'Number is required.'})
       }
 
-      const person = {
+      const person = new Person({
           name: body.name,
           number: body.number,
-          date: new Date(),
-          id: generateId(),
-      }
+      })
 
-      persons.concat(person)
-      response.json(person)
+      person.save()
+      .then(savedPerson => {
+        response.json(savedPerson)
+      })
   })
 
   app.delete('/api/persons/:id', (request, response) => {

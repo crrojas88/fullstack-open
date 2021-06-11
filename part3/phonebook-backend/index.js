@@ -49,9 +49,9 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
 
   app.post('/api/persons', (request, response, next) => {
       const body = request.body
-      
+
       if(body.content === null) {
-          return response.status(400).json({error: 'Content missing.'})
+        return response.status(400).json({error: 'Content missing.'})
       } else if(!body.name) {
         return response.status(400).json({error: 'Name is required'})
       } else if(!body.number) {
@@ -64,9 +64,7 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
       })
 
       person.save()
-      .then(savedPerson => {
-        response.json(savedPerson)
-      })
+      .then(savedPerson => savedPerson.toJSON())
       .catch(error => next(error))
   })
 
@@ -102,7 +100,9 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
 
     if(error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
-    }
+    } else if(error.name === 'ValidationError') {
+      return response.status(400).json({ error: error.message })
+  }
     next(error)
   }
 

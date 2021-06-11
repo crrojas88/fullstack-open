@@ -17,12 +17,16 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
   })
 
   app.get('/info', (request, response) => {
-    const date = new Date()
-    response.send(
-        `<p>Phonebook has info for ${Person.length} people.</p>
+    Person.find({})
+    .then(people => {
+      const date = new Date()
+      response.send(
+        `<p>Phonebook has info for ${people.length} people.</p>
         <br />
         ${date}
         `)
+    })
+    
 })
 
   app.get('/api/persons', (request, response) => {

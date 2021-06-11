@@ -29,20 +29,21 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
     Person.find({}).then(people => {response.json(people)})
   })
 
-//   GET single entry and return 404 status if id doesn't exist.
-  app.get('/api/persons/:id', (request, response) => {
-      const id = Number(request.params.id)
-      const person = persons.find(person => person.id === id)
+  app.get('/api/persons/:id', (request, response, next) => {
+    const id = request.params.id
 
+    Person.findById(id)
+    .then(person => {
       if(person) {
-          response.json(person)
-      } else {
-          response.status(404).end()
-      }
+        response.json(person)
+    } else {
+        response.status(404).end()
+    }
+    })
+    .catch(error => next(error))
   })
 
-  // Adding a new person allows user to create multiple entries for a person with the same name.
-  app.post('/api/persons', (request, response) => {
+  app.post('/api/persons', (request, response, next) => {
       const body = request.body
       
       if(body.content === null) {
@@ -62,6 +63,22 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
       .then(savedPerson => {
         response.json(savedPerson)
       })
+      .catch(error => next(error))
+  })
+
+  app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    const person = {
+      name: body.name,
+      number: body.number,
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
   })
 
   app.delete('/api/persons/:id', (request, response, next) => {

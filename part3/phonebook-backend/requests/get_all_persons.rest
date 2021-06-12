@@ -10,6 +10,6 @@
 # Content-Type: application/json
 
 # {
-#     "name": "Santiago Rojas",
-#     "number": "06-45-33-99-83"
+#     "name": "Banana",
+#     "number": "1"
 # }

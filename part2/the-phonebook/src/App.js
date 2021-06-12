@@ -49,7 +49,13 @@ const App = () => {
     .create(nameObj)
     .then(returnedContact => {
       setPersons(persons.concat(returnedContact))
-      setMessage(`${newName} has been added!`)
+      setMessage({success: `${newName} has been added!`})
+      setTimeout(() => {
+        setMessage(null)
+      }, 3000)
+    })
+    .catch(error => {
+      setMessage({failure: error.response.data})
       setTimeout(() => {
         setMessage(null)
       }, 3000)
@@ -118,7 +124,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-        <Notification message={message}/>
+        <Notification message={message?.success || message?.failure} className={message?.success ? 'success' : 'error'}/>
         <Search placeholder='Search Contacts' searchField={searchField} handleChange={handleChange} />
       <h2>Add New Contact</h2>
         <Form handleSubmit={handleSubmit} newName={newName} newNumber={newNumber} handleChange={handleChange}/>

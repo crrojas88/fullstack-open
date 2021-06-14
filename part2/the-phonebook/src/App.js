@@ -49,16 +49,16 @@ const App = () => {
     .create(nameObj)
     .then(returnedContact => {
       setPersons(persons.concat(returnedContact))
-      setMessage({success: `${newName} has been added!`})
+      setMessage({success: `${returnedContact.name} has been added!`})
       setTimeout(() => {
         setMessage(null)
-      }, 3000)
+      }, 5000)
     })
     .catch(error => {
-      setMessage({failure: error.response.data})
+      setMessage({failure: error.response.data.error})
       setTimeout(() => {
         setMessage(null)
-      }, 3000)
+      }, 6000)
     })
     setNewName('')
     setNewNumber('')
@@ -97,16 +97,13 @@ const App = () => {
   
   // takes the id and deletes from db then filters persons and returns persons that DON'T match with id
   const deleteContact = id => {
-    let deleted = true
     contactService
     .remove(id)
+    .then(() => {
+      setPersons(persons.filter(p => p.id !== id))
+    })
     .catch(error => {
       console.log(error)
-    })
-    .finally(() => {
-      if(deleted) {
-        setPersons(persons.filter(p => p.id !== id))
-      }
     })
   }
 

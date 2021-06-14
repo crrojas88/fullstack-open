@@ -52,9 +52,11 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
 
       if(body.content === null) {
         return response.status(400).json({error: 'Content missing.'})
-      } else if(!body.name) {
+      }
+      if(!body.name) {
         return response.status(400).json({error: 'Name is required'})
-      } else if(!body.number) {
+      }
+      if(!body.number) {
         return response.status(400).json({error: 'Number is required.'})
       }
 
@@ -64,7 +66,7 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
       })
 
       person.save()
-      .then(savedPerson => savedPerson.toJSON())
+      .then(savedPerson => response.json(savedPerson.toJSON()))
       .catch(error => next(error))
   })
 

@@ -25,7 +25,7 @@ const person = new Person({
 })
 
 // If length of CLI arguments are equal to 5 then they are added to db, else if they equal to 3, all results get printed.
-// If length of CLI arguments is 4 or more than 5, you have to include quotations. 
+// If length of CLI arguments is 4 or more than 5, you have to include quotations.
 if(process.argv.length === 5){
     person.save()
     .then(result => {
